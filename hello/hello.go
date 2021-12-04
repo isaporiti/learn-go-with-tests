@@ -1,8 +1,10 @@
 package hello
 
+const greeting = "Hello, "
+
 func Hello(name string) string {
 	if len(name) == 0 {
-		return "Hello, World"
+		name = "World"
 	}
-	return "Hello, " + name
+	return greeting + name
 }
