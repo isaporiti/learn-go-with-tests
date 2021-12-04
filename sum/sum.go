@@ -1,5 +1,6 @@
 package sum
 
-func Sum(x int, y int) int {
+// Sum takes two integers and returns the result of adding them
+func Sum(x, y int) int {
 	return x + y
 }

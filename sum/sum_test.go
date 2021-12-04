@@ -16,10 +16,14 @@ func TestSum(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			var got int = Sum(test.args.x, test.args.y)
+			x := test.args.x
+			y := test.args.y
 
-			if test.args.expected != got {
-				t.Errorf("expected: %d, got: %d", test.args.expected, got)
+			got := Sum(x, y)
+
+			expected := test.args.expected
+			if expected != got {
+				t.Errorf("expected: %d, got: %d", expected, got)
 			}
 		})
 	}
