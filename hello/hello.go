@@ -14,11 +14,10 @@ var greetings = map[language]string{
 
 var defaultGreeting = greetings[English]
 
+const defaultName = "World"
+
 func Hello(name string, language language) string {
-	if len(name) == 0 {
-		name = "World"
-	}
-	return getGreetingPrefix(language) + name
+	return getGreetingPrefix(language) + getName(name)
 }
 
 func getGreetingPrefix(language language) string {
@@ -27,4 +26,11 @@ func getGreetingPrefix(language language) string {
 		greetingPrefix = greetings[language]
 	}
 	return greetingPrefix
+}
+
+func getName(name string) string {
+	if len(name) == 0 {
+		name = defaultName
+	}
+	return name
 }
