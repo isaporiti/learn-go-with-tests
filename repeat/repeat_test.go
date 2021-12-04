@@ -2,7 +2,7 @@ package repeat
 
 import "testing"
 
-func TestRepeat1(t *testing.T) {
+func TestRepeat(t *testing.T) {
 	type args struct {
 		character string
 	}
@@ -21,5 +21,11 @@ func TestRepeat1(t *testing.T) {
 				t.Errorf("Repeat() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func BenchmarkRepeat(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Repeat("a")
 	}
 }
