@@ -1,19 +1,30 @@
 package hello
 
-const englishGreetingPrefix = "Hello, "
-const spanishGreetingPrefix = "Hola, "
-const frenchGreetingPrefix = "Bonjour, "
+type language string
 
-func Hello(name string, language string) string {
+const English language = "English"
+const Spanish language = "Spanish"
+const French language = "French"
+
+var greetings = map[language]string{
+	English: "Hello, ",
+	Spanish: "Hola, ",
+	French:  "Bonjour, ",
+}
+
+var defaultGreeting = greetings[English]
+
+func Hello(name string, language language) string {
 	if len(name) == 0 {
 		name = "World"
 	}
-	greetingPrefix := englishGreetingPrefix
-	if language == "Spanish" {
-		greetingPrefix = spanishGreetingPrefix
+	return getGreetingPrefix(language) + name
+}
+
+func getGreetingPrefix(language language) string {
+	greetingPrefix := defaultGreeting
+	if len(language) > 0 {
+		greetingPrefix = greetings[language]
 	}
-	if language == "French" {
-		greetingPrefix = frenchGreetingPrefix
-	}
-	return greetingPrefix + name
+	return greetingPrefix
 }
