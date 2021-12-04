@@ -12,9 +12,8 @@ func TestRepeat(t *testing.T) {
 		args args
 		want string
 	}{
-		{name: "repeats 'a' five times", args: args{character: "a"}, want: "aaaaa"},
-		{name: "repeats 'b' five times", args: args{character: "b"}, want: "bbbbb"},
-		{name: "repeats 'c' five times", args: args{character: "c"}, want: "ccccc"},
+		{name: "repeats 'a' five times", args: args{character: "a", times: 5}, want: "aaaaa"},
+		{name: "repeats 'b' five times", args: args{character: "b", times: 5}, want: "bbbbb"},
 		{name: "repeats a character a custom number of times", args: args{character: "z", times: 9}, want: "zzzzzzzzz"},
 	}
 	for _, tt := range tests {
