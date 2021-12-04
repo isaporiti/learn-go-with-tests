@@ -15,6 +15,7 @@ func TestHello(t *testing.T) {
 		{name: "It greets with 'Hello, World' by default", args: args{name: "", language: "", expected: "Hello, World"}},
 		{name: "It greets with 'Hello, {name}' when passed a name", args: args{name: "Ignacio", language: "", expected: "Hello, Ignacio"}},
 		{name: "It greets with 'Hola, {name}' when passed 'Spanish' language", args: args{name: "Ignacio", language: "Spanish", expected: "Hola, Ignacio"}},
+		{name: "It greets with 'Bonjour, {name}' when passed 'French' language", args: args{name: "Ignacio", language: "French", expected: "Bonjour, Ignacio"}},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
