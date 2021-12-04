@@ -1,6 +1,8 @@
 package hello
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestHello(t *testing.T) {
 	type args struct {
@@ -19,10 +21,22 @@ func TestHello(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			got := Hello(test.args.name, test.args.language)
+			got, _ := Hello(test.args.name, test.args.language)
 			if test.args.expected != got {
 				t.Errorf("expected: %s, got: %s", test.args.expected, got)
 			}
 		})
+	}
+}
+
+func TestHelloFailure(t *testing.T) {
+
+	var unsupportedLanguage language = "Esperanto"
+
+	_, err := Hello("Ignacio", unsupportedLanguage)
+
+	expected := "'Esperanto' language is unsupported"
+	if err.Error() != expected {
+		t.Errorf("expected error: %v, got: %v", expected, err)
 	}
 }

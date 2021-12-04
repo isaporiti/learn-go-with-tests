@@ -1,5 +1,9 @@
 package hello
 
+import (
+	"fmt"
+)
+
 type language string
 
 const English language = "English"
@@ -16,15 +20,22 @@ var defaultGreeting = greetings[English]
 
 const defaultName = "World"
 
-func Hello(name string, language language) string {
-	return getGreetingPrefix(language) + getName(name)
+func Hello(name string, language language) (string, error) {
+	greetingPrefix, err := getGreetingPrefix(language)
+	if err != nil {
+		return "", err
+	}
+	return greetingPrefix + getName(name), nil
 }
 
-func getGreetingPrefix(language language) string {
+func getGreetingPrefix(language language) (string, error) {
 	if len(language) == 0 {
-		return defaultGreeting
+		return defaultGreeting, nil
 	}
-	return greetings[language]
+	if greeting, ok := greetings[language]; ok {
+		return greeting, nil
+	}
+	return "", fmt.Errorf("'%s' language is unsupported", language)
 }
 
 func getName(name string) string {
