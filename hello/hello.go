@@ -21,16 +21,15 @@ func Hello(name string, language language) string {
 }
 
 func getGreetingPrefix(language language) string {
-	greetingPrefix := defaultGreeting
-	if len(language) > 0 {
-		greetingPrefix = greetings[language]
+	if len(language) == 0 {
+		return defaultGreeting
 	}
-	return greetingPrefix
+	return greetings[language]
 }
 
 func getName(name string) string {
 	if len(name) == 0 {
-		name = defaultName
+		return defaultName
 	}
 	return name
 }
