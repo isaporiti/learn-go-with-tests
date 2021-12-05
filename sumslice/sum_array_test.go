@@ -11,7 +11,6 @@ func TestSum(t *testing.T) {
 		name string
 		args args
 	}{
-		{name: "slice of [2, 2]", args: args{numbers: []int{2, 2}, want: 4}},
 		{name: "slice of [1, 2, 3, 4, 5]", args: args{numbers: []int{1, 2, 3, 4, 5}, want: 15}},
 	}
 	for _, test := range tests {
@@ -21,12 +20,4 @@ func TestSum(t *testing.T) {
 			}
 		})
 	}
-}
-
-func Sum(numbers []int) int {
-	sum := 0
-	for i := range numbers {
-		sum += numbers[i]
-	}
-	return sum
 }
