@@ -1,4 +1,4 @@
-package sumarray
+package sumslice
 
 import "testing"
 
