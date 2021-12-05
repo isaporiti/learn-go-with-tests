@@ -1,6 +1,9 @@
 package sumslice
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestSum(t *testing.T) {
 	type args struct {
@@ -20,4 +23,23 @@ func TestSum(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestSumAll(t *testing.T) {
+	got := SumAll([]int{2, 2}, []int{5, 6})
+	want := []int{4, 11}
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("want %v, got %v", want, got)
+	}
+}
+
+func SumAll(numbers ...[]int) []int {
+	sums := make([]int, len(numbers))
+	for i := range numbers {
+		for j := range numbers[i] {
+			sums[i] += numbers[i][j]
+		}
+	}
+	return sums
 }
