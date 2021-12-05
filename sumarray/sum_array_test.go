@@ -2,7 +2,7 @@ package sumarray
 
 import "testing"
 
-func TestSumArray(t *testing.T) {
+func TestSum(t *testing.T) {
 	type args struct {
 		numbers []int
 		want    int
@@ -11,8 +11,8 @@ func TestSumArray(t *testing.T) {
 		name string
 		args args
 	}{
-		{name: "it sums the numbers in [2, 2]", args: args{numbers: []int{2, 2}, want: 4}},
-		{name: "it sums the numbers in [1, 2, 3, 4, 5]", args: args{numbers: []int{1, 2, 3, 4, 5}, want: 15}},
+		{name: "slice of [2, 2]", args: args{numbers: []int{2, 2}, want: 4}},
+		{name: "slice of [1, 2, 3, 4, 5]", args: args{numbers: []int{1, 2, 3, 4, 5}, want: 15}},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
