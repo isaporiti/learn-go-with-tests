@@ -33,13 +33,3 @@ func TestSumAll(t *testing.T) {
 		t.Errorf("want %v, got %v", want, got)
 	}
 }
-
-func SumAll(numbers ...[]int) []int {
-	sums := make([]int, len(numbers))
-	for i := range numbers {
-		for j := range numbers[i] {
-			sums[i] += numbers[i][j]
-		}
-	}
-	return sums
-}
