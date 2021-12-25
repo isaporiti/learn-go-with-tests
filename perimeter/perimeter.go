@@ -1,5 +1,9 @@
 package perimeter
 
-func Perimeter(height, width float64) float64 {
+func Perimeter(width, height float64) float64 {
 	return (height + width) * 2
+}
+
+func Area(width, height float64) float64 {
+	return width * height
 }
