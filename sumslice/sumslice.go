@@ -25,15 +25,14 @@ func SumAllTails(numbersToSum ...[]int) []int {
 }
 
 func sumSlice(numbers []int) int {
-	sum := 0
-	if notEmpty(numbers) {
-		sum = sumTail(numbers)
+	if empty(numbers) {
+		return 0
 	}
-	return sum
+	return sumTail(numbers)
 }
 
-func notEmpty(numbers []int) bool {
-	return len(numbers) > 0
+func empty(numbers []int) bool {
+	return len(numbers) == 0
 }
 
 func sumTail(numbers []int) int {
