@@ -1,4 +1,4 @@
-package perimeter
+package geometry
 
 import "testing"
 
@@ -8,7 +8,7 @@ func TestPerimeter(t *testing.T) {
 		Height: 10.0,
 	}
 
-	got := Perimeter(rectangle)
+	got := rectangle.Perimeter()
 	want := 40.0
 
 	if got != want {

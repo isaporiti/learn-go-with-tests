@@ -1,4 +1,4 @@
-package perimeter
+package geometry
 
 import "math"
 
@@ -7,7 +7,7 @@ type Rectangle struct {
 	Height float64
 }
 
-func Perimeter(r Rectangle) float64 {
+func (r Rectangle) Perimeter() float64 {
 	return (r.Width + r.Height) * 2
 }
 
