@@ -32,18 +32,38 @@ func TestSearch(t *testing.T) {
 }
 
 func TestAdd(t *testing.T) {
-	dictionary := Dictionary{}
 
-	dictionary.Add("test", "this is just a test")
+	t.Run("new word", func(t *testing.T) {
+		dictionary := Dictionary{}
 
-	want := "this is just a test"
-	got, err := dictionary.Search("test")
+		word := "test"
+		definition := "this is just a test"
+		dictionary.Add(word, definition)
 
-	if err != nil {
-		t.Fatal("should find added word:", err)
-	}
+		want := definition
+		got, err := dictionary.Search("test")
 
-	if got != want {
-		t.Errorf("got %q want %q", got, want)
-	}
+		if err != nil {
+			t.Fatal("should find added word:", err)
+		}
+
+		if got != want {
+			t.Errorf("got %q want %q", got, want)
+		}
+	})
+
+	t.Run("existing word", func(t *testing.T) {
+		word := "test"
+		definition := "this is just a test"
+		dictionary := Dictionary{word: definition}
+
+		got := dictionary.Add(word, definition)
+
+		want := wordAlreadyDefinedError
+
+		if got != want {
+			t.Errorf("got %q want %q", got, want)
+		}
+	})
+
 }
