@@ -65,5 +65,19 @@ func TestAdd(t *testing.T) {
 			t.Errorf("got %q want %q", got, want)
 		}
 	})
+}
 
+func TestUpdate(t *testing.T) {
+	word := "test"
+	dictionary := Dictionary{word: "this is a test"}
+	newDefinition := "this is the new definition"
+
+	dictionary.Update(word, newDefinition)
+
+	want := newDefinition
+	got, _ := dictionary.Search(word)
+
+	if got != want {
+		t.Errorf("got %q want %q given %q", got, want, word)
+	}
 }
