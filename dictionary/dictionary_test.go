@@ -1,6 +1,8 @@
 package dictionary
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestSearch(t *testing.T) {
 
@@ -68,16 +70,34 @@ func TestAdd(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	word := "test"
-	dictionary := Dictionary{word: "this is a test"}
-	newDefinition := "this is the new definition"
 
-	dictionary.Update(word, newDefinition)
+	t.Run("existing word", func(t *testing.T) {
+		word := "test"
+		dictionary := Dictionary{word: "this is a test"}
+		newDefinition := "this is the new definition"
 
-	want := newDefinition
-	got, _ := dictionary.Search(word)
+		dictionary.Update(word, newDefinition)
 
-	if got != want {
-		t.Errorf("got %q want %q given %q", got, want, word)
-	}
+		want := newDefinition
+		got, _ := dictionary.Search(word)
+
+		if got != want {
+			t.Errorf("got %q want %q given %q", got, want, word)
+		}
+	})
+
+	t.Run("new word", func(t *testing.T) {
+		word := "test"
+		dictionary := Dictionary{}
+		definition := "this is a test"
+
+		got := dictionary.Update(word, definition)
+
+		want := wordDoesNotExistError
+
+		if got != want {
+			t.Errorf("got %q want %q", got, want)
+		}
+	})
+
 }

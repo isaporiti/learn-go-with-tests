@@ -7,6 +7,7 @@ type Dictionary map[string]string
 var (
 	wordNotFoundError       = errors.New("could not find the word you're looking for")
 	wordAlreadyDefinedError = errors.New("cannot add word because it already exists")
+	wordDoesNotExistError   = errors.New("cannot update word missing in dictionary")
 )
 
 // Search looks up a word in a given dictionary and returns its definition if found.
@@ -31,6 +32,11 @@ func (d Dictionary) Add(word, definition string) error {
 	return nil
 }
 
-func (d Dictionary) Update(word, newDefinition string) {
-	d[word] = newDefinition
+func (d Dictionary) Update(word, newDefinition string) error {
+	_, wordExists := d[word]
+	if wordExists {
+		d[word] = newDefinition
+		return nil
+	}
+	return wordDoesNotExistError
 }
