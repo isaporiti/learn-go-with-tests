@@ -32,6 +32,8 @@ func (d Dictionary) Add(word, definition string) error {
 	return nil
 }
 
+// Update overrides an existing word's definition with a new definition.
+// If the word doesn't exist, a non-nil error is returned.
 func (d Dictionary) Update(word, newDefinition string) error {
 	_, wordExists := d[word]
 	if wordExists {
