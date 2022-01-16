@@ -99,5 +99,17 @@ func TestUpdate(t *testing.T) {
 			t.Errorf("got %q want %q", got, want)
 		}
 	})
+}
 
+func TestDelete(t *testing.T) {
+	dictionary := Dictionary{}
+	word := "test"
+	dictionary.Add(word, "this is a test")
+
+	dictionary.Delete(word)
+
+	_, err := dictionary.Search(word)
+	if err != wordNotFoundError {
+		t.Errorf("expected %q to be deleted", word)
+	}
 }

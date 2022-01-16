@@ -42,3 +42,7 @@ func (d Dictionary) Update(word, newDefinition string) error {
 	}
 	return wordDoesNotExistError
 }
+
+func (d Dictionary) Delete(word string) {
+	delete(d, word)
+}
