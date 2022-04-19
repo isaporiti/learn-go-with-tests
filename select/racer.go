@@ -8,13 +8,13 @@ import (
 
 var err = errors.New("timeout of 10 seconds exceeded")
 
-func Racer(a, b string) (string, error) {
+func Racer(a, b string, timeout time.Duration) (string, error) {
 	select {
 	case <-ping(a):
 		return a, nil
 	case <-ping(b):
 		return b, nil
-	case <-time.After(10 * time.Second):
+	case <-time.After(timeout):
 		return "", err
 	}
 }

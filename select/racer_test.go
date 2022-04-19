@@ -9,12 +9,12 @@ import (
 
 func TestRacer(t *testing.T) {
 	t.Run("it races HTTP requests between two URLs and tells the winner", func(t *testing.T) {
-		slowServer := buildDelayedServer(20 * time.Millisecond)
+		slowServer := buildDelayedServer(5 * time.Millisecond)
 		fastServer := buildDelayedServer(0 * time.Millisecond)
 		defer slowServer.Close()
 		defer fastServer.Close()
 
-		got, _ := Racer(slowServer.URL, fastServer.URL)
+		got, _ := Racer(slowServer.URL, fastServer.URL, 10*time.Millisecond)
 		want := fastServer.URL
 
 		if want != got {
@@ -23,12 +23,12 @@ func TestRacer(t *testing.T) {
 	})
 
 	t.Run("it informs when both requests took more than 10 seconds", func(t *testing.T) {
-		slowServer := buildDelayedServer(11 * time.Second)
-		fastServer := buildDelayedServer(12 * time.Second)
+		slowServer := buildDelayedServer(11 * time.Millisecond)
+		fastServer := buildDelayedServer(12 * time.Millisecond)
 		defer slowServer.Close()
 		defer fastServer.Close()
 
-		_, err := Racer(slowServer.URL, fastServer.URL)
+		_, err := Racer(slowServer.URL, fastServer.URL, 10*time.Millisecond)
 
 		if err == nil {
 			t.Error("wanted an error, got nil")
@@ -37,9 +37,8 @@ func TestRacer(t *testing.T) {
 }
 
 func buildDelayedServer(delay time.Duration) *httptest.Server {
-	slowServer := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+	return httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		time.Sleep(delay)
 		writer.WriteHeader(http.StatusOK)
 	}))
-	return slowServer
 }
