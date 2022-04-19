@@ -23,8 +23,8 @@ func TestRacer(t *testing.T) {
 	})
 
 	t.Run("it informs when both requests took more than 10 seconds", func(t *testing.T) {
-		slowServer := buildDelayedServer(11 * time.Millisecond)
-		fastServer := buildDelayedServer(12 * time.Millisecond)
+		slowServer := buildDelayedServer(12 * time.Millisecond)
+		fastServer := buildDelayedServer(11 * time.Millisecond)
 		defer slowServer.Close()
 		defer fastServer.Close()
 
