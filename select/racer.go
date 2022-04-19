@@ -6,16 +6,17 @@ import (
 )
 
 func Racer(a, b string) string {
-	timeA := time.Now()
-	http.Get(a)
-	durationA := time.Since(timeA)
-
-	timeB := time.Now()
-	http.Get(a)
-	durationB := time.Since(timeB)
-
+	durationA := measureTime(a)
+	durationB := measureTime(b)
 	if durationA < durationB {
 		return a
 	}
 	return b
+}
+
+func measureTime(a string) time.Duration {
+	timeA := time.Now()
+	http.Get(a)
+	durationA := time.Since(timeA)
+	return durationA
 }
