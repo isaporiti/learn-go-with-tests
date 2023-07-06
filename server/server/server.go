@@ -16,13 +16,23 @@ func NewPlayerServer(store store.PlayerStore) PlayerServer {
 	return PlayerServer{store}
 }
 
-func (server *PlayerServer) ServeHTTP(response http.ResponseWriter, request *http.Request) {
+func (s *PlayerServer) ServeHTTP(response http.ResponseWriter, request *http.Request) {
 	if request.Method == http.MethodPost {
-		response.WriteHeader(http.StatusAccepted)
+		s.scoreWin(response)
 		return
 	}
+	if request.Method == http.MethodGet {
+		s.getScore(request, response)
+	}
+}
+
+func (s *PlayerServer) scoreWin(response http.ResponseWriter) {
+	response.WriteHeader(http.StatusAccepted)
+}
+
+func (s *PlayerServer) getScore(request *http.Request, response http.ResponseWriter) {
 	player := strings.TrimPrefix(request.URL.Path, "/players/")
-	score, err := server.playerStore.GetPlayerScore(player)
+	score, err := s.playerStore.GetPlayerScore(player)
 	if err != nil {
 		response.WriteHeader(http.StatusNotFound)
 		fmt.Fprint(response, "")
