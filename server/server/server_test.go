@@ -140,4 +140,14 @@ func TestLeague(t *testing.T) {
 			t.Errorf("got: '%v', want: '%v'", got, want)
 		}
 	})
+
+	t.Run("it returns application/json content type", func(t *testing.T) {
+		t.Parallel()
+		request := newRequest(t, http.MethodGet, "/league")
+		response := httptest.NewRecorder()
+
+		playerServer.ServeHTTP(response, request)
+
+		assertEqual(t, "application/json", response.Result().Header.Get("content-type"))
+	})
 }
