@@ -16,12 +16,7 @@ func TestGetPlayers(t *testing.T) {
 
 		server.PlayerServer(response, request)
 
-		got := response.Body.String()
-		want := "20"
-
-		if got != want {
-			t.Errorf("want '%s', got '%s'", got, want)
-		}
+		assertEqual(t, "20", response.Body.String())
 	})
 
 	t.Run("it returns Floyd's score", func(t *testing.T) {
@@ -31,12 +26,7 @@ func TestGetPlayers(t *testing.T) {
 
 		server.PlayerServer(response, request)
 
-		got := response.Body.String()
-		want := "10"
-
-		if got != want {
-			t.Errorf("want '%s', got '%s'", got, want)
-		}
+		assertEqual(t, "10", response.Body.String())
 	})
 
 	t.Run("it informs if player is not found", func(t *testing.T) {
@@ -46,12 +36,8 @@ func TestGetPlayers(t *testing.T) {
 
 		server.PlayerServer(response, request)
 
-		if response.Code != http.StatusNotFound {
-			t.Errorf("want '%d', got '%d'", response.Code, http.StatusNotFound)
-		}
-		if response.Body.String() != "" {
-			t.Errorf("want '%s', got '%s'", response.Body.String(), "")
-		}
+		assertEqual(t, http.StatusNotFound, response.Code)
+		assertEqual(t, "", response.Body.String())
 	})
 }
 
@@ -61,4 +47,10 @@ func newRequest(t *testing.T, path string) *http.Request {
 		t.Errorf("couldn't create request: %s", err)
 	}
 	return request
+}
+
+func assertEqual[T comparable](t *testing.T, want, got T) {
+	if want != got {
+		t.Errorf("want '%v', got '%v'", want, got)
+	}
 }
