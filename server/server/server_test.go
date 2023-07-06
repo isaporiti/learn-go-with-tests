@@ -107,3 +107,21 @@ func scoreWin(t *testing.T, playerServer server.PlayerServer, player string) *ht
 	playerServer.ServeHTTP(response, request)
 	return response
 }
+
+func TestLeague(t *testing.T) {
+	playerStore, err := newPlayerStore()
+	if err != nil {
+		t.Error(err)
+	}
+	playerServer := server.NewPlayerServer(playerStore)
+
+	t.Run("it returns OK on /league", func(t *testing.T) {
+		t.Parallel()
+		request := newRequest(t, http.MethodGet, "/league")
+		response := httptest.NewRecorder()
+
+		playerServer.ServeHTTP(response, request)
+
+		assertEqual(t, http.StatusOK, response.Code)
+	})
+}
