@@ -9,11 +9,10 @@ import (
 )
 
 func main() {
-	store := store.NewInMemoryPlayerStore(map[string]int{
-		"Pepper": 20,
-		"Floyd":  10,
-	})
-	server := server.NewPlayerServer(store)
-	err := http.ListenAndServe(":5001", &server)
-	log.Fatal(err)
+	playerStore, err := store.NewInMemoryPlayerStore()
+	if err != nil {
+		log.Fatal(err)
+	}
+	server := server.NewPlayerServer(playerStore)
+	log.Fatal(http.ListenAndServe(":5001", &server))
 }

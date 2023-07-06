@@ -11,7 +11,10 @@ import (
 )
 
 func TestGetPlayers(t *testing.T) {
-	playerStore := newPlayerStore()
+	playerStore, err := newPlayerStore()
+	if err != nil {
+		t.Error(err)
+	}
 	playerServer := server.NewPlayerServer(playerStore)
 
 	t.Run("it returns Pepper score", func(t *testing.T) {
@@ -37,12 +40,13 @@ func TestGetPlayers(t *testing.T) {
 	})
 }
 
-func newPlayerStore() *store.InMemoryPlayerStore {
-	playerStore := store.NewInMemoryPlayerStore(map[string]int{
+func newPlayerStore() (*store.InMemoryPlayerStore, error) {
+	scores := map[string]int{
 		"Pepper": 20,
 		"Floyd":  10,
-	})
-	return playerStore
+	}
+	playerStore, err := store.NewInMemoryPlayerStore(store.WithScores(scores))
+	return playerStore, err
 }
 
 func getScore(t *testing.T, playerServer server.PlayerServer, player string) *httptest.ResponseRecorder {
@@ -71,7 +75,10 @@ func assertEqual[T comparable](t *testing.T, want, got T) {
 func TestPostPlayer(t *testing.T) {
 	t.Run("it returns Accepted code", func(t *testing.T) {
 		t.Parallel()
-		playerStore := newPlayerStore()
+		playerStore, err := newPlayerStore()
+		if err != nil {
+			t.Error(err)
+		}
 		playerServer := server.NewPlayerServer(playerStore)
 		response := scoreWin(t, playerServer, "Pepper")
 
@@ -80,7 +87,10 @@ func TestPostPlayer(t *testing.T) {
 
 	t.Run("it records win", func(t *testing.T) {
 		t.Parallel()
-		playerStore := newPlayerStore()
+		playerStore, err := newPlayerStore()
+		if err != nil {
+			t.Error(err)
+		}
 		playerServer := server.NewPlayerServer(playerStore)
 		scoreWin(t, playerServer, "Pepper")
 		scoreWin(t, playerServer, "Pepper")
