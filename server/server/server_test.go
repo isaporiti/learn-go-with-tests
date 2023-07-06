@@ -5,16 +5,22 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	server "github.com/isaporiti/learn-go-with-tests/server"
+	server "github.com/isaporiti/learn-go-with-tests/server/server"
+	store "github.com/isaporiti/learn-go-with-tests/server/store"
 )
 
 func TestGetPlayers(t *testing.T) {
+	playerStore := store.NewInMemoryPlayerStore(map[string]int{
+		"Pepper": 20,
+		"Floyd":  10,
+	})
+	playerServer := server.NewPlayerServer(playerStore)
 	t.Run("it returns Pepper score", func(t *testing.T) {
 		t.Parallel()
 		request := newRequest(t, "/players/Pepper")
 		response := httptest.NewRecorder()
 
-		server.PlayerServer(response, request)
+		playerServer.ServeHTTP(response, request)
 
 		assertEqual(t, "20", response.Body.String())
 	})
@@ -24,7 +30,7 @@ func TestGetPlayers(t *testing.T) {
 		request := newRequest(t, "/players/Floyd")
 		response := httptest.NewRecorder()
 
-		server.PlayerServer(response, request)
+		playerServer.ServeHTTP(response, request)
 
 		assertEqual(t, "10", response.Body.String())
 	})
@@ -34,7 +40,7 @@ func TestGetPlayers(t *testing.T) {
 		request := newRequest(t, "/players/Unkown")
 		response := httptest.NewRecorder()
 
-		server.PlayerServer(response, request)
+		playerServer.ServeHTTP(response, request)
 
 		assertEqual(t, http.StatusNotFound, response.Code)
 		assertEqual(t, "", response.Body.String())
