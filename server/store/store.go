@@ -12,7 +12,7 @@ type InMemoryPlayerStore struct {
 
 func NewInMemoryPlayerStore(scores map[string]int) *InMemoryPlayerStore {
 	if scores == nil {
-		return &InMemoryPlayerStore{make(map[string]int)}
+		return &InMemoryPlayerStore{map[string]int{}}
 	}
 	return &InMemoryPlayerStore{scores}
 }
