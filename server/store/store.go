@@ -7,6 +7,7 @@ import (
 
 type PlayerStore interface {
 	GetPlayerScore(name string) (int, error)
+	GetAllScores() map[string]int
 	ScoreWin(name string)
 }
 
@@ -63,4 +64,8 @@ func (s *InMemoryPlayerStore) ScoreWin(name string) {
 	s.mutex.Lock()
 	s.scores[name] += 1
 	s.mutex.Unlock()
+}
+
+func (s *InMemoryPlayerStore) GetAllScores() map[string]int {
+	return s.scores
 }

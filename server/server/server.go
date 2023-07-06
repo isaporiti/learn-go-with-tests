@@ -30,11 +30,12 @@ func (s *PlayerServer) handleLeague(response http.ResponseWriter, request *http.
 	response.WriteHeader(http.StatusOK)
 }
 
-func (*PlayerServer) getLeagueTable() []Player {
-	leagueTable := []Player{
-		{"Chris", 20},
+func (s *PlayerServer) getLeagueTable() []Player {
+	var league []Player
+	for name, wins := range s.playerStore.GetAllScores() {
+		league = append(league, Player{Name: name, Wins: wins})
 	}
-	return leagueTable
+	return league
 }
 
 func (s *PlayerServer) handlePlayers(response http.ResponseWriter, request *http.Request) {

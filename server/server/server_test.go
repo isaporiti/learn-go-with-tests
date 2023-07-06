@@ -126,7 +126,8 @@ func TestLeague(t *testing.T) {
 
 		var got []server.Player
 		want := []server.Player{
-			{Name: "Chris", Wins: 20},
+			{Name: "Pepper", Wins: 20},
+			{Name: "Floyd", Wins: 10},
 		}
 		err := json.NewDecoder(response.Body).Decode(&got)
 
