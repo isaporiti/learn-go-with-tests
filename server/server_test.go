@@ -11,10 +11,7 @@ import (
 func TestGetPlayers(t *testing.T) {
 	t.Run("it returns Pepper score", func(t *testing.T) {
 		t.Parallel()
-		request, err := http.NewRequest(http.MethodGet, "/players/Pepper", nil)
-		if err != nil {
-			t.Errorf("could't create request: %s", err)
-		}
+		request := newRequest(t, "/players/Pepper")
 		response := httptest.NewRecorder()
 
 		server.PlayerServer(response, request)
@@ -29,10 +26,7 @@ func TestGetPlayers(t *testing.T) {
 
 	t.Run("it returns Floyd's score", func(t *testing.T) {
 		t.Parallel()
-		request, err := http.NewRequest(http.MethodGet, "/players/Floyd", nil)
-		if err != nil {
-			t.Errorf("couldn't create request: %s", err)
-		}
+		request := newRequest(t, "/players/Floyd")
 		response := httptest.NewRecorder()
 
 		server.PlayerServer(response, request)
@@ -46,10 +40,8 @@ func TestGetPlayers(t *testing.T) {
 	})
 
 	t.Run("it informs if player is not found", func(t *testing.T) {
-		request, err := http.NewRequest(http.MethodGet, "/players/Unkown", nil)
-		if err != nil {
-			t.Errorf("couldn't create request: %s", err)
-		}
+		t.Parallel()
+		request := newRequest(t, "/players/Unkown")
 		response := httptest.NewRecorder()
 
 		server.PlayerServer(response, request)
@@ -61,4 +53,12 @@ func TestGetPlayers(t *testing.T) {
 			t.Errorf("want '%s', got '%s'", response.Body.String(), "")
 		}
 	})
+}
+
+func newRequest(t *testing.T, path string) *http.Request {
+	request, err := http.NewRequest(http.MethodGet, path, nil)
+	if err != nil {
+		t.Errorf("couldn't create request: %s", err)
+	}
+	return request
 }
