@@ -4,6 +4,7 @@ import "fmt"
 
 type PlayerStore interface {
 	GetPlayerScore(name string) (int, error)
+	ScoreWin(name string)
 }
 
 type InMemoryPlayerStore struct {
@@ -23,4 +24,8 @@ func (s *InMemoryPlayerStore) GetPlayerScore(name string) (int, error) {
 		return 0, fmt.Errorf("player not found")
 	}
 	return score, nil
+}
+
+func (s *InMemoryPlayerStore) ScoreWin(name string) {
+	s.scores[name] += 1
 }

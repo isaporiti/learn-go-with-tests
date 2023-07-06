@@ -18,7 +18,7 @@ func NewPlayerServer(store store.PlayerStore) PlayerServer {
 
 func (s *PlayerServer) ServeHTTP(response http.ResponseWriter, request *http.Request) {
 	if request.Method == http.MethodPost {
-		s.scoreWin(response)
+		s.scoreWin(request, response)
 		return
 	}
 	if request.Method == http.MethodGet {
@@ -26,12 +26,19 @@ func (s *PlayerServer) ServeHTTP(response http.ResponseWriter, request *http.Req
 	}
 }
 
-func (s *PlayerServer) scoreWin(response http.ResponseWriter) {
+func (s *PlayerServer) scoreWin(request *http.Request, response http.ResponseWriter) {
+	player := s.getPlayerName(request)
+	s.playerStore.ScoreWin(player)
 	response.WriteHeader(http.StatusAccepted)
 }
 
-func (s *PlayerServer) getScore(request *http.Request, response http.ResponseWriter) {
+func (*PlayerServer) getPlayerName(request *http.Request) string {
 	player := strings.TrimPrefix(request.URL.Path, "/players/")
+	return player
+}
+
+func (s *PlayerServer) getScore(request *http.Request, response http.ResponseWriter) {
+	player := s.getPlayerName(request)
 	score, err := s.playerStore.GetPlayerScore(player)
 	if err != nil {
 		response.WriteHeader(http.StatusNotFound)
