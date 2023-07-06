@@ -18,8 +18,8 @@ func NewPlayerServer(store store.PlayerStore) PlayerServer {
 
 func (s *PlayerServer) ServeHTTP(response http.ResponseWriter, request *http.Request) {
 	router := http.NewServeMux()
-	router.Handle("/league", http.HandlerFunc(s.handleLeague))
-	router.Handle("/players/", http.HandlerFunc(s.handlePlayers))
+	router.HandleFunc("/league", s.handleLeague)
+	router.HandleFunc("/players/", s.handlePlayers)
 	router.ServeHTTP(response, request)
 }
 
@@ -28,33 +28,31 @@ func (s *PlayerServer) handleLeague(response http.ResponseWriter, request *http.
 }
 
 func (s *PlayerServer) handlePlayers(response http.ResponseWriter, request *http.Request) {
+	player := s.getPlayerName(request)
 	if request.Method == http.MethodPost {
-		s.scoreWin(request, response)
+		s.scoreWin(player)
+		response.WriteHeader(http.StatusAccepted)
 		return
 	}
 	if request.Method == http.MethodGet {
-		s.getScore(request, response)
+		score, err := s.getScore(player)
+		if err != nil {
+			response.WriteHeader(http.StatusNotFound)
+			fmt.Fprint(response, "")
+			return
+		}
+		fmt.Fprint(response, score)
 	}
 }
-
-func (s *PlayerServer) scoreWin(request *http.Request, response http.ResponseWriter) {
-	player := s.getPlayerName(request)
-	s.playerStore.ScoreWin(player)
-	response.WriteHeader(http.StatusAccepted)
-}
-
 func (*PlayerServer) getPlayerName(request *http.Request) string {
 	player := strings.TrimPrefix(request.URL.Path, "/players/")
 	return player
 }
 
-func (s *PlayerServer) getScore(request *http.Request, response http.ResponseWriter) {
-	player := s.getPlayerName(request)
-	score, err := s.playerStore.GetPlayerScore(player)
-	if err != nil {
-		response.WriteHeader(http.StatusNotFound)
-		fmt.Fprint(response, "")
-		return
-	}
-	fmt.Fprint(response, score)
+func (s *PlayerServer) scoreWin(player string) {
+	s.playerStore.ScoreWin(player)
+}
+
+func (s *PlayerServer) getScore(player string) (int, error) {
+	return s.playerStore.GetPlayerScore(player)
 }
