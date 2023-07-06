@@ -1,6 +1,9 @@
 package server
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
 type PlayerStore interface {
 	GetPlayerScore(name string) (int, error)
@@ -9,13 +12,14 @@ type PlayerStore interface {
 
 type InMemoryPlayerStore struct {
 	scores map[string]int
+	sync.Mutex
 }
 
 func NewInMemoryPlayerStore(scores map[string]int) *InMemoryPlayerStore {
 	if scores == nil {
-		return &InMemoryPlayerStore{map[string]int{}}
+		return &InMemoryPlayerStore{scores: map[string]int{}}
 	}
-	return &InMemoryPlayerStore{scores}
+	return &InMemoryPlayerStore{scores: scores}
 }
 
 func (s *InMemoryPlayerStore) GetPlayerScore(name string) (int, error) {
@@ -27,5 +31,7 @@ func (s *InMemoryPlayerStore) GetPlayerScore(name string) (int, error) {
 }
 
 func (s *InMemoryPlayerStore) ScoreWin(name string) {
+	s.Lock()
 	s.scores[name] += 1
+	s.Unlock()
 }
