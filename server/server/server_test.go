@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 
 	server "github.com/isaporiti/learn-go-with-tests/server/server"
@@ -124,6 +125,9 @@ func TestLeague(t *testing.T) {
 		playerServer.ServeHTTP(response, request)
 
 		var got []server.Player
+		want := []server.Player{
+			{Name: "Chris", Wins: 20},
+		}
 		err := json.NewDecoder(response.Body).Decode(&got)
 
 		if err != nil {
@@ -131,6 +135,8 @@ func TestLeague(t *testing.T) {
 		}
 
 		assertEqual(t, http.StatusOK, response.Code)
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got: '%v', want: '%v'", got, want)
+		}
 	})
 }
-
