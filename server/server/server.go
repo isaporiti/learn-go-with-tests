@@ -18,19 +18,23 @@ func NewPlayerServer(store store.PlayerStore) PlayerServer {
 
 func (s *PlayerServer) ServeHTTP(response http.ResponseWriter, request *http.Request) {
 	router := http.NewServeMux()
-	router.Handle("/league", http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
-		response.WriteHeader(http.StatusOK)
-	}))
-	router.Handle("/players/", http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
-		if request.Method == http.MethodPost {
-			s.scoreWin(request, response)
-			return
-		}
-		if request.Method == http.MethodGet {
-			s.getScore(request, response)
-		}
-	}))
+	router.Handle("/league", http.HandlerFunc(s.handleLeague))
+	router.Handle("/players/", http.HandlerFunc(s.handlePlayers))
 	router.ServeHTTP(response, request)
+}
+
+func (s *PlayerServer) handleLeague(response http.ResponseWriter, request *http.Request) {
+	response.WriteHeader(http.StatusOK)
+}
+
+func (s *PlayerServer) handlePlayers(response http.ResponseWriter, request *http.Request) {
+	if request.Method == http.MethodPost {
+		s.scoreWin(request, response)
+		return
+	}
+	if request.Method == http.MethodGet {
+		s.getScore(request, response)
+	}
 }
 
 func (s *PlayerServer) scoreWin(request *http.Request, response http.ResponseWriter) {
