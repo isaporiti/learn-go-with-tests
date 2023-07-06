@@ -29,7 +29,7 @@ func TestGetPlayers(t *testing.T) {
 
 	t.Run("it returns Floyd's score", func(t *testing.T) {
 		t.Parallel()
-		request, err := http.NewRequest(http.MethodGet, "players/Floyd", nil)
+		request, err := http.NewRequest(http.MethodGet, "/players/Floyd", nil)
 		if err != nil {
 			t.Errorf("couldn't create request: %s", err)
 		}
@@ -42,6 +42,23 @@ func TestGetPlayers(t *testing.T) {
 
 		if got != want {
 			t.Errorf("want '%s', got '%s'", got, want)
+		}
+	})
+
+	t.Run("it informs if player is not found", func(t *testing.T) {
+		request, err := http.NewRequest(http.MethodGet, "/players/Unkown", nil)
+		if err != nil {
+			t.Errorf("couldn't create request: %s", err)
+		}
+		response := httptest.NewRecorder()
+
+		server.PlayerServer(response, request)
+
+		if response.Code != http.StatusNotFound {
+			t.Errorf("want '%d', got '%d'", response.Code, http.StatusNotFound)
+		}
+		if response.Body.String() != "" {
+			t.Errorf("want '%s', got '%s'", response.Body.String(), "")
 		}
 	})
 }

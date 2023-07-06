@@ -7,9 +7,16 @@ import (
 )
 
 func PlayerServer(response http.ResponseWriter, request *http.Request) {
-	if strings.Contains(request.URL.Path, "Pepper") {
+	player := strings.TrimPrefix(request.URL.Path, "/players/")
+
+	if player == "Pepper" {
 		fmt.Fprint(response, "20")
 		return
 	}
-	fmt.Fprint(response, "10")
+	if player == "Floyd" {
+		fmt.Fprint(response, "10")
+		return
+	}
+	response.WriteHeader(http.StatusNotFound)
+	fmt.Fprint(response, "")
 }
