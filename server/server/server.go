@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -24,7 +25,16 @@ func NewPlayerServer(store store.PlayerStore) PlayerServer {
 }
 
 func (s *PlayerServer) handleLeague(response http.ResponseWriter, request *http.Request) {
+	leagueTable := s.getLeagueTable()
+	json.NewEncoder(response).Encode(leagueTable)
 	response.WriteHeader(http.StatusOK)
+}
+
+func (*PlayerServer) getLeagueTable() []Player {
+	leagueTable := []Player{
+		{"Chris", 20},
+	}
+	return leagueTable
 }
 
 func (s *PlayerServer) handlePlayers(response http.ResponseWriter, request *http.Request) {
@@ -55,4 +65,9 @@ func (s *PlayerServer) scoreWin(player string) {
 
 func (s *PlayerServer) getScore(player string) (int, error) {
 	return s.playerStore.GetPlayerScore(player)
+}
+
+type Player struct {
+	Name string
+	Wins int
 }
