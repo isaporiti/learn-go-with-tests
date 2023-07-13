@@ -25,3 +25,16 @@ func (s *FileSystemStore) GetLeague() ([]server.Player, error) {
 	}
 	return league, nil
 }
+
+func (s *FileSystemStore) GetPlayerScore(name string) (int, error) {
+	league, err := s.GetLeague()
+	if err != nil {
+		return 0, fmt.Errorf("could not get player '%s' score: %v", name, err)
+	}
+	for _, player := range league {
+		if player.Name == name {
+			return player.Wins, nil
+		}
+	}
+	return 0, fmt.Errorf("could find player '%s'", name)
+}

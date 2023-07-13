@@ -9,8 +9,10 @@ import (
 	"github.com/isaporiti/learn-go-with-tests/server/store"
 )
 
-func TestFileSystemStore(t *testing.T) {
+func TestFileSystemStore_GetLeague(t *testing.T) {
 	t.Run("get league", func(t *testing.T) {
+		t.Parallel()
+
 		database := strings.NewReader(`[
 			{"Name": "Pepper", "Wins": 2},
 			{"Name": "Floyd", "Wins": 3}
@@ -32,6 +34,8 @@ func TestFileSystemStore(t *testing.T) {
 	})
 
 	t.Run("get league multiple times", func(t *testing.T) {
+		t.Parallel()
+
 		database := strings.NewReader(`[
 			{"Name": "Pepper", "Wins": 2},
 			{"Name": "Floyd", "Wins": 3}
@@ -54,6 +58,29 @@ func TestFileSystemStore(t *testing.T) {
 
 		if !reflect.DeepEqual(got, want) {
 			t.Errorf("got league: %v, want: %v", got, want)
+		}
+	})
+}
+
+func TestFileSystemStore_GetScore(t *testing.T) {
+	t.Run("get score", func(t *testing.T) {
+		t.Parallel()
+
+		database := strings.NewReader(`[
+			{"Name": "Pepper", "Wins": 3},
+			{"Name": "Floyd", "Wins": 0}
+		]`)
+		store := store.NewFileSystemStore(database)
+
+		got, err := store.GetPlayerScore("Pepper")
+
+		if err != nil {
+			t.Errorf("could not get score: %v", err)
+		}
+
+		want := 3
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
 		}
 	})
 }
