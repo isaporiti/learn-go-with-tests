@@ -56,10 +56,11 @@ func (s *InMemoryPlayerStore) GetPlayerScore(name string) (int, error) {
 	return score, nil
 }
 
-func (s *InMemoryPlayerStore) ScoreWin(name string) {
+func (s *InMemoryPlayerStore) ScoreWin(name string) error {
 	s.mutex.Lock()
 	s.scores[name] += 1
 	s.mutex.Unlock()
+	return nil
 }
 
 func (s *InMemoryPlayerStore) GetLeague() ([]server.Player, error) {

@@ -38,3 +38,18 @@ func (s *FileSystemStore) GetPlayerScore(name string) (int, error) {
 	}
 	return 0, fmt.Errorf("could find player '%s'", name)
 }
+
+func (s *FileSystemStore) ScoreWin(name string) error {
+	league, err := s.GetLeague()
+	if err != nil {
+		return fmt.Errorf("could not score win for player '%s'", name)
+	}
+	for i, player := range league {
+		if player.Name == name {
+			league[i].Wins++
+		}
+	}
+	s.database.Seek(0, 0)
+	json.NewEncoder(s.database).Encode(league)
+	return nil
+}

@@ -66,7 +66,7 @@ func (s *PlayerServer) getScore(player string) (int, error) {
 type PlayerStore interface {
 	GetPlayerScore(name string) (int, error)
 	GetLeague() ([]Player, error)
-	ScoreWin(name string)
+	ScoreWin(name string) error
 }
 
 type Player struct {
