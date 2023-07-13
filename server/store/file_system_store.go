@@ -9,10 +9,10 @@ import (
 )
 
 type FileSystemStore struct {
-	database io.ReadSeeker
+	database io.ReadWriteSeeker
 }
 
-func NewFileSystemStore(database io.ReadSeeker) *FileSystemStore {
+func NewFileSystemStore(database io.ReadWriteSeeker) *FileSystemStore {
 	return &FileSystemStore{database: database}
 }
 
