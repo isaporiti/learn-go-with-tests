@@ -23,13 +23,13 @@ func NewPlayerServer(store PlayerStore) PlayerServer {
 }
 
 func (s *PlayerServer) handleLeague(response http.ResponseWriter, request *http.Request) {
-	leagueTable := s.getLeagueTable()
+	leagueTable, _ := s.getLeagueTable()
 	response.Header().Set("content-type", "application/json")
 	response.WriteHeader(http.StatusOK)
 	json.NewEncoder(response).Encode(leagueTable)
 }
 
-func (s *PlayerServer) getLeagueTable() []Player {
+func (s *PlayerServer) getLeagueTable() ([]Player, error) {
 	return s.playerStore.GetLeague()
 }
 
@@ -65,7 +65,7 @@ func (s *PlayerServer) getScore(player string) (int, error) {
 
 type PlayerStore interface {
 	GetPlayerScore(name string) (int, error)
-	GetLeague() []Player
+	GetLeague() ([]Player, error)
 	ScoreWin(name string)
 }
 

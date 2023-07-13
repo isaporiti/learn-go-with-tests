@@ -62,10 +62,10 @@ func (s *InMemoryPlayerStore) ScoreWin(name string) {
 	s.mutex.Unlock()
 }
 
-func (s *InMemoryPlayerStore) GetLeague() []server.Player {
+func (s *InMemoryPlayerStore) GetLeague() ([]server.Player, error) {
 	var league []server.Player
 	for name, score := range s.scores {
 		league = append(league, server.Player{Name: name, Wins: score})
 	}
-	return league
+	return league, nil
 }
