@@ -3,13 +3,9 @@ package store
 import (
 	"fmt"
 	"sync"
-)
 
-type PlayerStore interface {
-	GetPlayerScore(name string) (int, error)
-	GetAllScores() map[string]int
-	ScoreWin(name string)
-}
+	server "github.com/isaporiti/learn-go-with-tests/server/server"
+)
 
 type InMemoryPlayerStore struct {
 	scores map[string]int
@@ -66,6 +62,10 @@ func (s *InMemoryPlayerStore) ScoreWin(name string) {
 	s.mutex.Unlock()
 }
 
-func (s *InMemoryPlayerStore) GetAllScores() map[string]int {
-	return s.scores
+func (s *InMemoryPlayerStore) GetLeague() []server.Player {
+	var league []server.Player
+	for name, score := range s.scores {
+		league = append(league, server.Player{Name: name, Wins: score})
+	}
+	return league
 }

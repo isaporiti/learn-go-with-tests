@@ -5,16 +5,14 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-
-	store "github.com/isaporiti/learn-go-with-tests/server/store"
 )
 
 type PlayerServer struct {
-	playerStore store.PlayerStore
+	playerStore PlayerStore
 	http.Handler
 }
 
-func NewPlayerServer(store store.PlayerStore) PlayerServer {
+func NewPlayerServer(store PlayerStore) PlayerServer {
 	s := PlayerServer{}
 	s.playerStore = store
 	router := http.NewServeMux()
@@ -32,11 +30,7 @@ func (s *PlayerServer) handleLeague(response http.ResponseWriter, request *http.
 }
 
 func (s *PlayerServer) getLeagueTable() []Player {
-	var league []Player
-	for name, wins := range s.playerStore.GetAllScores() {
-		league = append(league, Player{Name: name, Wins: wins})
-	}
-	return league
+	return s.playerStore.GetLeague()
 }
 
 func (s *PlayerServer) handlePlayers(response http.ResponseWriter, request *http.Request) {
@@ -67,6 +61,12 @@ func (s *PlayerServer) scoreWin(player string) {
 
 func (s *PlayerServer) getScore(player string) (int, error) {
 	return s.playerStore.GetPlayerScore(player)
+}
+
+type PlayerStore interface {
+	GetPlayerScore(name string) (int, error)
+	GetLeague() []Player
+	ScoreWin(name string)
 }
 
 type Player struct {
