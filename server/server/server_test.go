@@ -124,8 +124,8 @@ func TestLeague(t *testing.T) {
 
 		playerServer.ServeHTTP(response, request)
 
-		var got []server.Player
-		want := []server.Player{
+		var got server.League
+		want := server.League{
 			{Name: "Pepper", Wins: 20},
 			{Name: "Floyd", Wins: 10},
 		}

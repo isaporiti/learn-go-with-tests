@@ -29,7 +29,7 @@ func (s *PlayerServer) handleLeague(response http.ResponseWriter, request *http.
 	json.NewEncoder(response).Encode(leagueTable)
 }
 
-func (s *PlayerServer) getLeagueTable() ([]Player, error) {
+func (s *PlayerServer) getLeagueTable() (League, error) {
 	return s.playerStore.GetLeague()
 }
 
@@ -65,7 +65,7 @@ func (s *PlayerServer) getScore(player string) (int, error) {
 
 type PlayerStore interface {
 	GetPlayerScore(name string) (int, error)
-	GetLeague() ([]Player, error)
+	GetLeague() (League, error)
 	ScoreWin(name string) error
 }
 

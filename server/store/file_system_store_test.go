@@ -28,7 +28,7 @@ func TestFileSystemStore_GetLeague(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		want := []server.Player{
+		want := server.League{
 			{Name: "Pepper", Wins: 2},
 			{Name: "Floyd", Wins: 3},
 		}
@@ -45,7 +45,7 @@ func TestFileSystemStore_GetLeague(t *testing.T) {
 
 		store := store.NewFileSystemStore(database)
 		var err error
-		want := []server.Player{
+		want := server.League{
 			{Name: "Pepper", Wins: 2},
 			{Name: "Floyd", Wins: 3},
 		}

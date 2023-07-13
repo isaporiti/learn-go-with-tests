@@ -63,8 +63,8 @@ func (s *InMemoryPlayerStore) ScoreWin(name string) error {
 	return nil
 }
 
-func (s *InMemoryPlayerStore) GetLeague() ([]server.Player, error) {
-	var league []server.Player
+func (s *InMemoryPlayerStore) GetLeague() (server.League, error) {
+	var league server.League
 	for name, score := range s.scores {
 		league = append(league, server.Player{Name: name, Wins: score})
 	}
