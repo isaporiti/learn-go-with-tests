@@ -1,14 +1,12 @@
 package store_test
 
 import (
-	"encoding/json"
-	"fmt"
-	"io"
 	"reflect"
 	"strings"
 	"testing"
 
-	server "github.com/isaporiti/learn-go-with-tests/server/server"
+	"github.com/isaporiti/learn-go-with-tests/server/server"
+	"github.com/isaporiti/learn-go-with-tests/server/store"
 )
 
 func TestFileSystemStore(t *testing.T) {
@@ -17,7 +15,7 @@ func TestFileSystemStore(t *testing.T) {
 			{"Name": "Pepper", "Wins": 2},
 			{"Name": "Floyd", "Wins": 3}
 		]`)
-		store := FileSystemStore{database}
+		store := store.NewFileSystemStore(database)
 
 		got, err := store.GetLeague()
 
@@ -38,7 +36,7 @@ func TestFileSystemStore(t *testing.T) {
 			{"Name": "Pepper", "Wins": 2},
 			{"Name": "Floyd", "Wins": 3}
 		]`)
-		store := FileSystemStore{database}
+		store := store.NewFileSystemStore(database)
 		var err error
 		want := []server.Player{
 			{Name: "Pepper", Wins: 2},
@@ -58,18 +56,4 @@ func TestFileSystemStore(t *testing.T) {
 			t.Errorf("got league: %v, want: %v", got, want)
 		}
 	})
-}
-
-type FileSystemStore struct {
-	database io.ReadSeeker
-}
-
-func (s *FileSystemStore) GetLeague() ([]server.Player, error) {
-	s.database.Seek(0, 0)
-	var league []server.Player
-	err := json.NewDecoder(s.database).Decode(&league)
-	if err != nil {
-		return nil, fmt.Errorf("couln't decode league: %v", err)
-	}
-	return league, nil
 }
