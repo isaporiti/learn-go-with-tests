@@ -33,7 +33,7 @@ func (s *FileSystemStore) GetPlayerScore(name string) (int, error) {
 	}
 	player := league.Find(name)
 	if player == nil {
-		return 0, fmt.Errorf("could find player '%s'", name)
+		return 0, nil
 	}
 	return player.Wins, nil
 }
@@ -45,9 +45,11 @@ func (s *FileSystemStore) ScoreWin(name string) error {
 	}
 	player := league.Find(name)
 	if player == nil {
-		return fmt.Errorf("did not find player %s", name)
+		player := server.Player{Name: name, Wins: 1}
+		league = append(league, player)
+	} else {
+		player.Wins++
 	}
-	player.Wins++
 	s.database.Seek(0, 0)
 	json.NewEncoder(s.database).Encode(league)
 	return nil

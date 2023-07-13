@@ -105,26 +105,50 @@ func TestFileSystemStore_GetScore(t *testing.T) {
 }
 
 func TestFileSystemStore_ScoreWin(t *testing.T) {
-	t.Parallel()
+	t.Run("score win for existing player", func(t *testing.T) {
+		t.Parallel()
 
-	database, cleanDatabase := createTempFile(t, initialData)
-	defer cleanDatabase()
-	store := store.NewFileSystemStore(database)
+		database, cleanDatabase := createTempFile(t, initialData)
+		defer cleanDatabase()
+		store := store.NewFileSystemStore(database)
 
-	var err error
-	_, err = store.GetPlayerScore("Pepper")
-	if err != nil {
-		t.Fatal(err)
-	}
+		var err error
+		_, err = store.GetPlayerScore("Pepper")
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	store.ScoreWin("Pepper")
+		store.ScoreWin("Pepper")
 
-	got, err := store.GetPlayerScore("Pepper")
-	if err != nil {
-		t.Fatal(err)
-	}
-	want := 3
-	if got != want {
-		t.Errorf("got %d, want %d", got, want)
-	}
+		got, err := store.GetPlayerScore("Pepper")
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := 3
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+
+	t.Run("score win for new player", func(t *testing.T) {
+		t.Parallel()
+
+		database, cleanDatabase := createTempFile(t, initialData)
+		defer cleanDatabase()
+		store := store.NewFileSystemStore(database)
+
+		var err error
+
+		store.ScoreWin("Sapo")
+		store.ScoreWin("Sapo")
+
+		got, err := store.GetPlayerScore("Sapo")
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := 2
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
 }
