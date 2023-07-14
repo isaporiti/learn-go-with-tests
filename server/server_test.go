@@ -1,4 +1,4 @@
-package server_test
+package server
 
 import (
 	"encoding/json"
@@ -7,9 +7,6 @@ import (
 	"net/http/httptest"
 	"reflect"
 	"testing"
-
-	"github.com/isaporiti/learn-go-with-tests/server/server"
-	"github.com/isaporiti/learn-go-with-tests/server/store"
 )
 
 func TestGetPlayers(t *testing.T) {
@@ -17,7 +14,7 @@ func TestGetPlayers(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	playerServer := server.NewPlayerServer(playerStore)
+	playerServer := NewPlayerServer(playerStore)
 
 	t.Run("it returns Pepper score", func(t *testing.T) {
 		t.Parallel()
@@ -42,16 +39,16 @@ func TestGetPlayers(t *testing.T) {
 	})
 }
 
-func newPlayerStore() (*store.InMemoryPlayerStore, error) {
+func newPlayerStore() (*InMemoryPlayerStore, error) {
 	scores := map[string]int{
 		"Pepper": 20,
 		"Floyd":  10,
 	}
-	playerStore, err := store.NewInMemoryPlayerStore(store.WithScores(scores))
+	playerStore, err := NewInMemoryPlayerStore(WithScores(scores))
 	return playerStore, err
 }
 
-func getScore(t *testing.T, playerServer server.PlayerServer, player string) *httptest.ResponseRecorder {
+func getScore(t *testing.T, playerServer PlayerServer, player string) *httptest.ResponseRecorder {
 	path := fmt.Sprintf("/players/%s", player)
 	request := newRequest(t, http.MethodGet, path)
 	response := httptest.NewRecorder()
@@ -81,7 +78,7 @@ func TestPostPlayer(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		playerServer := server.NewPlayerServer(playerStore)
+		playerServer := NewPlayerServer(playerStore)
 		response := scoreWin(t, playerServer, "Pepper")
 
 		assertEqual(t, http.StatusAccepted, response.Code)
@@ -93,7 +90,7 @@ func TestPostPlayer(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		playerServer := server.NewPlayerServer(playerStore)
+		playerServer := NewPlayerServer(playerStore)
 		scoreWin(t, playerServer, "Pepper")
 		scoreWin(t, playerServer, "Pepper")
 		response := getScore(t, playerServer, "Pepper")
@@ -102,7 +99,7 @@ func TestPostPlayer(t *testing.T) {
 	})
 }
 
-func scoreWin(t *testing.T, playerServer server.PlayerServer, player string) *httptest.ResponseRecorder {
+func scoreWin(t *testing.T, playerServer PlayerServer, player string) *httptest.ResponseRecorder {
 	path := fmt.Sprintf("/players/%s", player)
 	request := newRequest(t, http.MethodPost, path)
 	response := httptest.NewRecorder()
@@ -115,7 +112,7 @@ func TestLeague(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	playerServer := server.NewPlayerServer(playerStore)
+	playerServer := NewPlayerServer(playerStore)
 
 	t.Run("it returns OK on /league", func(t *testing.T) {
 		t.Parallel()
@@ -124,8 +121,8 @@ func TestLeague(t *testing.T) {
 
 		playerServer.ServeHTTP(response, request)
 
-		var got server.League
-		want := server.League{
+		var got League
+		want := League{
 			{Name: "Pepper", Wins: 20},
 			{Name: "Floyd", Wins: 10},
 		}

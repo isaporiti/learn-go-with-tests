@@ -1,11 +1,9 @@
-package store
+package server
 
 import (
 	"encoding/json"
 	"fmt"
 	"io"
-
-	"github.com/isaporiti/learn-go-with-tests/server/server"
 )
 
 type FileSystemStore struct {
@@ -16,9 +14,9 @@ func NewFileSystemStore(database io.ReadWriteSeeker) *FileSystemStore {
 	return &FileSystemStore{database: database}
 }
 
-func (s *FileSystemStore) GetLeague() (server.League, error) {
+func (s *FileSystemStore) GetLeague() (League, error) {
 	s.database.Seek(0, 0)
-	var league server.League
+	var league League
 	err := json.NewDecoder(s.database).Decode(&league)
 	if err != nil {
 		return nil, fmt.Errorf("couln't decode league: %v", err)
@@ -45,7 +43,7 @@ func (s *FileSystemStore) ScoreWin(name string) error {
 	}
 	player := league.Find(name)
 	if player == nil {
-		player := server.Player{Name: name, Wins: 1}
+		player := Player{Name: name, Wins: 1}
 		league = append(league, player)
 	} else {
 		player.Wins++

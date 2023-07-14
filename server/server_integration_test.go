@@ -1,16 +1,11 @@
-package server_test
+package server
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"reflect"
 	"testing"
-
-	"github.com/isaporiti/learn-go-with-tests/server/server"
-	"github.com/isaporiti/learn-go-with-tests/server/store"
 )
 
 func TestRecordingWinsAndRetrievingThem(t *testing.T) {
@@ -20,8 +15,8 @@ func TestRecordingWinsAndRetrievingThem(t *testing.T) {
 		{"Name": "Floyd", "Wins": 10}
 	]`)
 	defer clearDatabase()
-	store := store.NewFileSystemStore(database)
-	playerServer := server.NewPlayerServer(store)
+	store := NewFileSystemStore(database)
+	playerServer := NewPlayerServer(store)
 	scoreWin(t, playerServer, "Pepper")
 	scoreWin(t, playerServer, "Pepper")
 	response := getScore(t, playerServer, "Pepper")
@@ -37,8 +32,8 @@ func TestRecordingWinsAndRetrievingLeague(t *testing.T) {
 		{"Name": "Floyd", "Wins": 10}
 	]`)
 	defer clearDatabase()
-	store := store.NewFileSystemStore(database)
-	playerServer := server.NewPlayerServer(store)
+	store := NewFileSystemStore(database)
+	playerServer := NewPlayerServer(store)
 	scoreWin(t, playerServer, "Pepper")
 	scoreWin(t, playerServer, "Floyd")
 	scoreWin(t, playerServer, "Floyd")
@@ -49,8 +44,8 @@ func TestRecordingWinsAndRetrievingLeague(t *testing.T) {
 
 	playerServer.ServeHTTP(response, request)
 
-	var got server.League
-	want := server.League{
+	var got League
+	want := League{
 		{Name: "Pepper", Wins: 21},
 		{Name: "Floyd", Wins: 13},
 	}
@@ -62,23 +57,4 @@ func TestRecordingWinsAndRetrievingLeague(t *testing.T) {
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("got: '%v', want: '%v'", got, want)
 	}
-}
-
-func createTempFile(t *testing.T, initialData string) (io.ReadWriteSeeker, func()) {
-	t.Helper()
-	var err error
-	file, err := os.CreateTemp("", "db")
-	if err != nil {
-		t.Fatalf("could not create temp file: %v", err)
-	}
-	file.Write([]byte(initialData))
-	removeFile := func() {
-		err = file.Close()
-		if err != nil {
-			t.Fatalf("could not close temp file: %v", err)
-		}
-		os.Remove(file.Name())
-	}
-
-	return file, removeFile
 }

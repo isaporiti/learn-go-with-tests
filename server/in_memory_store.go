@@ -1,10 +1,8 @@
-package store
+package server
 
 import (
 	"fmt"
 	"sync"
-
-	server "github.com/isaporiti/learn-go-with-tests/server/server"
 )
 
 type InMemoryPlayerStore struct {
@@ -63,10 +61,10 @@ func (s *InMemoryPlayerStore) ScoreWin(name string) error {
 	return nil
 }
 
-func (s *InMemoryPlayerStore) GetLeague() (server.League, error) {
-	var league server.League
+func (s *InMemoryPlayerStore) GetLeague() (League, error) {
+	var league League
 	for name, score := range s.scores {
-		league = append(league, server.Player{Name: name, Wins: score})
+		league = append(league, Player{Name: name, Wins: score})
 	}
 	return league, nil
 }

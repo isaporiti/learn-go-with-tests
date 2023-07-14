@@ -1,13 +1,10 @@
-package store_test
+package server
 
 import (
 	"io"
 	"os"
 	"reflect"
 	"testing"
-
-	"github.com/isaporiti/learn-go-with-tests/server/server"
-	"github.com/isaporiti/learn-go-with-tests/server/store"
 )
 
 const initialData = `[
@@ -21,14 +18,14 @@ func TestFileSystemStore_GetLeague(t *testing.T) {
 		database, cleanDatabase := createTempFile(t, initialData)
 		defer cleanDatabase()
 
-		store := store.NewFileSystemStore(database)
+		store := NewFileSystemStore(database)
 
 		got, err := store.GetLeague()
 
 		if err != nil {
 			t.Fatal(err)
 		}
-		want := server.League{
+		want := League{
 			{Name: "Pepper", Wins: 2},
 			{Name: "Floyd", Wins: 3},
 		}
@@ -43,9 +40,9 @@ func TestFileSystemStore_GetLeague(t *testing.T) {
 		database, cleanDatabase := createTempFile(t, initialData)
 		defer cleanDatabase()
 
-		store := store.NewFileSystemStore(database)
+		store := NewFileSystemStore(database)
 		var err error
-		want := server.League{
+		want := League{
 			{Name: "Pepper", Wins: 2},
 			{Name: "Floyd", Wins: 3},
 		}
@@ -90,7 +87,7 @@ func TestFileSystemStore_GetScore(t *testing.T) {
 	database, cleanDatabase := createTempFile(t, initialData)
 	defer cleanDatabase()
 
-	store := store.NewFileSystemStore(database)
+	store := NewFileSystemStore(database)
 
 	got, err := store.GetPlayerScore("Pepper")
 
@@ -110,7 +107,7 @@ func TestFileSystemStore_ScoreWin(t *testing.T) {
 
 		database, cleanDatabase := createTempFile(t, initialData)
 		defer cleanDatabase()
-		store := store.NewFileSystemStore(database)
+		store := NewFileSystemStore(database)
 
 		var err error
 		_, err = store.GetPlayerScore("Pepper")
@@ -135,7 +132,7 @@ func TestFileSystemStore_ScoreWin(t *testing.T) {
 
 		database, cleanDatabase := createTempFile(t, initialData)
 		defer cleanDatabase()
-		store := store.NewFileSystemStore(database)
+		store := NewFileSystemStore(database)
 
 		var err error
 
