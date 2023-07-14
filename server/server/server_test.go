@@ -8,8 +8,8 @@ import (
 	"reflect"
 	"testing"
 
-	server "github.com/isaporiti/learn-go-with-tests/server/server"
-	store "github.com/isaporiti/learn-go-with-tests/server/store"
+	"github.com/isaporiti/learn-go-with-tests/server/server"
+	"github.com/isaporiti/learn-go-with-tests/server/store"
 )
 
 func TestGetPlayers(t *testing.T) {
